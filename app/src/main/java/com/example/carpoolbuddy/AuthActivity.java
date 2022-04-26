@@ -17,6 +17,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 public class AuthActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -31,7 +34,7 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_auth);
 
         mAuth = FirebaseAuth.getInstance();
-        //firestore = FirebaseFirestore.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         emailField = findViewById(R.id.userInputEmail);
         passwordField = findViewById(R.id.userInputPassword);
@@ -101,6 +104,10 @@ public class AuthActivity extends AppCompatActivity {
                         Log.d("SIGN UP", "successfully signed up the user");
                         FirebaseUser user = mAuth.getCurrentUser();
                         updateUI(user);
+
+                        //temporary test for adding vehicles to a user (it works! :D)
+                        Vehicle testVehicle = new Vehicle(emailString,"Tesla",4,UUID.randomUUID().toString(),new ArrayList<>(),true,"car",10.00);
+                        firestore.collection("all-users").document(emailString).collection("vehicles").document(testVehicle.getVehicleID()).set(testVehicle);
                     }
                     else
                     {
