@@ -10,7 +10,7 @@
         android:id="@+id/carModelInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="58dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="Car model"
         android:inputType="textPersonName"
@@ -18,17 +18,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/nameInput" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="32dp"
         android:text="Create new vehicle"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -74,26 +74,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/carTypeInput" />
 
-    <Switch
-        android:id="@+id/openBoolean"
-        android:layout_width="184dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="49dp"
-        android:text="Open for passengers?"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/priceInput" />
-
     <Button
         android:id="@+id/createVehicleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="143dp"
         android:onClick="createNewVehicle"
         android:text="Create"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/openBoolean" />
+        app:layout_constraintTop_toBottomOf="@+id/priceInput" />
+
+    <EditText
+        android:id="@+id/nameInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:ems="10"
+        android:hint="Owner name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

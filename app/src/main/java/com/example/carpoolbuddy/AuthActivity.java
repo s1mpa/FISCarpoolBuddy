@@ -105,9 +105,12 @@ public class AuthActivity extends AppCompatActivity {
                         FirebaseUser user = mAuth.getCurrentUser();
                         updateUI(user);
 
+                        /*
                         //temporary test for adding vehicles to a user (it works! :D)
                         Vehicle testVehicle = new Vehicle(emailString,"Tesla",4,UUID.randomUUID().toString(),new ArrayList<>(),true,"car",10.00);
                         firestore.collection("all-users").document(emailString).collection("vehicles").document(testVehicle.getVehicleID()).set(testVehicle);
+
+                         */
                     }
                     else
                     {
