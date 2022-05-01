@@ -6,13 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".VehiclesInfoActivity">
 
-    <Button
-        android:id="@+id/displayButton"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vehiclesRecView"
+        android:layout_width="398dp"
+        android:layout_height="311dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="123dp"
-        android:onClick="getAndPopulateData"
-        android:text="Button"
+        android:layout_marginTop="50dp"
+        android:text="Your Vehicles:"
+        android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
