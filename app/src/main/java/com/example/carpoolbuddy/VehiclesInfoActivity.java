@@ -21,6 +21,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import io.opencensus.tags.Tag;
+
 public class VehiclesInfoActivity extends AppCompatActivity implements VehiclesAdapter.OnNoteListener {
 
     private FirebaseAuth mAuth;
@@ -91,18 +93,21 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehiclesA
                 System.out.println("Models: --->" + carModelsList.toString());
                 System.out.println("Prices: --->" + carPricesList.toString());
 
-                VehiclesAdapter myAdapter = new VehiclesAdapter(carOwnersList,carModelsList,carPricesList);
+
+                VehiclesAdapter myAdapter = new VehiclesAdapter(carOwnersList,carModelsList,carPricesList, VehiclesInfoActivity.this);
                 recView.setAdapter(myAdapter);
-                recView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                recView.setLayoutManager(new LinearLayoutManager(VehiclesInfoActivity.this));
+
             }
         });
 
     }
 
-
     @Override
     public void onNoteClick(int position) {
+        System.out.println("--> clicked");
         Intent myIntent = new Intent(this, VehicleDetailsActivity.class);
         startActivity(myIntent);
     }
+
 }

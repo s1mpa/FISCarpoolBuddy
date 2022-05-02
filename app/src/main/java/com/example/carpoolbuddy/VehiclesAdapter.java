@@ -15,11 +15,14 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehicleViewHolder>
     ArrayList<String> myData2;
     ArrayList<String> myData3;
 
-    public VehiclesAdapter(ArrayList<String> myData, ArrayList<String> myData2, ArrayList<String> myData3)
+    private OnNoteListener mOnNoteListener;
+
+    public VehiclesAdapter(ArrayList<String> myData, ArrayList<String> myData2, ArrayList<String> myData3, OnNoteListener onNoteListener)
     {
         this.myData = myData;
         this.myData2 = myData2;
         this.myData3 = myData3;
+        this.mOnNoteListener = onNoteListener;
     }
 
 
@@ -28,7 +31,7 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehicleViewHolder>
 
     public VehicleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.vehicle_row_layout,parent,false);
-        VehicleViewHolder myHolder = new VehicleViewHolder(myView);
+        VehicleViewHolder myHolder = new VehicleViewHolder(myView, mOnNoteListener);
         return myHolder;
     }
 

@@ -8,16 +8,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
 
-public class VehicleViewHolder extends RecyclerView.ViewHolder {
+public class VehicleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     protected TextView carOwner;
     protected TextView carModel;
     protected TextView carPrice;
+    VehiclesAdapter.OnNoteListener myOnNoteListener;
 
-    public VehicleViewHolder(@NonNull View itemView) {
+
+    public VehicleViewHolder(@NonNull View itemView, VehiclesAdapter.OnNoteListener onNoteListener) {
         super(itemView);
+
+
         carOwner = itemView.findViewById(R.id.carOwnerText);
         carModel = itemView.findViewById(R.id.carModelText);
         carPrice = itemView.findViewById(R.id.carPriceText);
+
+        this.myOnNoteListener = onNoteListener;
+        itemView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        myOnNoteListener.onNoteClick(getAdapterPosition());
     }
 }
