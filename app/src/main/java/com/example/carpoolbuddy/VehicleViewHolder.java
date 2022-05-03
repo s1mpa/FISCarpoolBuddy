@@ -13,13 +13,11 @@ public class VehicleViewHolder extends RecyclerView.ViewHolder implements View.O
     protected TextView carOwner;
     protected TextView carModel;
     protected TextView carPrice;
-    VehiclesAdapter.OnNoteListener myOnNoteListener;
+    private OnNoteListener myOnNoteListener;
 
 
-    public VehicleViewHolder(@NonNull View itemView, VehiclesAdapter.OnNoteListener onNoteListener) {
+    public VehicleViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
         super(itemView);
-
-
         carOwner = itemView.findViewById(R.id.carOwnerText);
         carModel = itemView.findViewById(R.id.carModelText);
         carPrice = itemView.findViewById(R.id.carPriceText);
@@ -29,7 +27,15 @@ public class VehicleViewHolder extends RecyclerView.ViewHolder implements View.O
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v)
+    {
+
         myOnNoteListener.onNoteClick(getAdapterPosition());
     }
+
+    public interface OnNoteListener
+    {
+        void onNoteClick(int position);
+    }
+
 }

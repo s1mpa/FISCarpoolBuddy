@@ -11,13 +11,12 @@ import java.util.ArrayList;
 
 public class VehiclesAdapter extends RecyclerView.Adapter<VehicleViewHolder>
 {
-    ArrayList<String> myData;
-    ArrayList<String> myData2;
-    ArrayList<String> myData3;
+    private ArrayList<String> myData;
+    private ArrayList<String> myData2;
+    private ArrayList<String> myData3;
+    private VehicleViewHolder.OnNoteListener mOnNoteListener;
 
-    private OnNoteListener mOnNoteListener;
-
-    public VehiclesAdapter(ArrayList<String> myData, ArrayList<String> myData2, ArrayList<String> myData3, OnNoteListener onNoteListener)
+    public VehiclesAdapter(ArrayList<String> myData, ArrayList<String> myData2, ArrayList<String> myData3, VehicleViewHolder.OnNoteListener onNoteListener)
     {
         this.myData = myData;
         this.myData2 = myData2;
@@ -31,8 +30,7 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehicleViewHolder>
 
     public VehicleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.vehicle_row_layout,parent,false);
-        VehicleViewHolder myHolder = new VehicleViewHolder(myView, mOnNoteListener);
-        return myHolder;
+        return new VehicleViewHolder(myView, mOnNoteListener);
     }
 
     @Override
@@ -49,8 +47,5 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehicleViewHolder>
 
 
     //WIP clickable rec view
-    public interface OnNoteListener
-    {
-        void onNoteClick(int position);
-    }
+
 }

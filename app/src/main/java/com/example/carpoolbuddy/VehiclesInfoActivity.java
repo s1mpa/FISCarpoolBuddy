@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 import io.opencensus.tags.Tag;
 
-public class VehiclesInfoActivity extends AppCompatActivity implements VehiclesAdapter.OnNoteListener {
+public class VehiclesInfoActivity extends AppCompatActivity implements VehicleViewHolder.OnNoteListener {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
