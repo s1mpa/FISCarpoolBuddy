@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 
@@ -29,9 +30,6 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
     private FirebaseFirestore firestore;
     private FirebaseUser currUser;
     private ArrayList<Vehicle> vehiclesList;
-    private ArrayList<String> carOwnersList;
-    private ArrayList<String> carModelsList;
-    private ArrayList<String> carPricesList;
 
 
     RecyclerView recView;
@@ -77,24 +75,8 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
                     System.out.println("Retrieved vehicle --->" + v.getVehicleID()); //just to check it was able to get all vehicles
                 }
 
-                carOwnersList = new ArrayList<>();
-                carModelsList = new ArrayList<>();
-                carPricesList = new ArrayList<>();
 
-                for(Vehicle v : vehiclesList)
-                {
-                    carOwnersList.add(v.getOwner());
-                    carModelsList.add(v.getModel());
-                    carPricesList.add(Double.toString(v.getPrice()));
-                }
-
-                //to check all info is retrieved correctly for rec view
-                System.out.println("Owners: --->" + carOwnersList.toString());
-                System.out.println("Models: --->" + carModelsList.toString());
-                System.out.println("Prices: --->" + carPricesList.toString());
-
-
-                VehiclesAdapter myAdapter = new VehiclesAdapter(carOwnersList,carModelsList,carPricesList, VehiclesInfoActivity.this);
+                VehiclesAdapter myAdapter = new VehiclesAdapter(vehiclesList, VehiclesInfoActivity.this);
                 recView.setAdapter(myAdapter);
                 recView.setLayoutManager(new LinearLayoutManager(VehiclesInfoActivity.this));
 
@@ -107,6 +89,7 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
     public void onNoteClick(int position) {
         System.out.println("--> clicked");
         Intent myIntent = new Intent(this, VehicleDetailsActivity.class);
+        myIntent.putExtra("vehicles", (Parcelable) vehiclesList.get(position));
         startActivity(myIntent);
     }
 

@@ -29,7 +29,6 @@ public class VehicleViewHolder extends RecyclerView.ViewHolder implements View.O
     @Override
     public void onClick(View v)
     {
-
         myOnNoteListener.onNoteClick(getAdapterPosition());
     }
 

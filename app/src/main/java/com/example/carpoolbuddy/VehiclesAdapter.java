@@ -11,16 +11,12 @@ import java.util.ArrayList;
 
 public class VehiclesAdapter extends RecyclerView.Adapter<VehicleViewHolder>
 {
-    private ArrayList<String> myData;
-    private ArrayList<String> myData2;
-    private ArrayList<String> myData3;
+    private ArrayList<Vehicle> myData;
     private VehicleViewHolder.OnNoteListener mOnNoteListener;
 
-    public VehiclesAdapter(ArrayList<String> myData, ArrayList<String> myData2, ArrayList<String> myData3, VehicleViewHolder.OnNoteListener onNoteListener)
+    public VehiclesAdapter(ArrayList<Vehicle> myData, VehicleViewHolder.OnNoteListener onNoteListener)
     {
         this.myData = myData;
-        this.myData2 = myData2;
-        this.myData3 = myData3;
         this.mOnNoteListener = onNoteListener;
     }
 
@@ -35,9 +31,9 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehicleViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull VehicleViewHolder holder, int position) {
-        holder.carOwner.setText(myData.get(position));
-        holder.carModel.setText(myData2.get(position));
-        holder.carPrice.setText(myData3.get(position));
+        holder.carOwner.setText(myData.get(position).getOwner());
+        holder.carModel.setText(myData.get(position).getModel());
+        holder.carPrice.setText(Double.toString(myData.get(position).getPrice()));
     }
 
     @Override
