@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,24 +57,60 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         }
     }
 
+    public void back(View v)
+    {
+        Intent myIntent = new Intent(this, VehiclesInfoActivity.class);
+        startActivity(myIntent);
+    }
+
     public void bookRide(View v)
     {
-        selectedVehicle.addRiderUID(mUser.getUid());
-        firestore.collection("all-users").document(mUser.getUid()).collection("vehicles").document(selectedVehicle.getVehicleID()).update("riderUIDs", selectedVehicle.getRidersUIDs()).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                int temp = selectedVehicle.getCapacity() - 1;
-                selectedVehicle.setCurrCapacity(temp);
-                firestore.collection("all-users").document(mUser.getUid()).collection("vehicles").document(selectedVehicle.getVehicleID()).update("currCapacity", temp).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Intent intent = new Intent(getApplicationContext(), VehiclesInfoActivity.class);
-                        startActivity(intent);
-                        finish();
+        if(selectedVehicle.getRidersUIDs().contains(mUser.getUid()))
+        {
+            Toast.makeText(getApplicationContext(),"Already booked!",Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            selectedVehicle.addRiderUID(mUser.getUid());
+            firestore.collection("all-items").document("all-vehicles").collection("vehicles").document(selectedVehicle.getVehicleID()).update("ridersUIDs", selectedVehicle.getRidersUIDs()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    int temp = selectedVehicle.getCurrCapacity() - 1;
+                    selectedVehicle.setCurrCapacity(temp);
+
+                    if(selectedVehicle.getCurrCapacity() == 0)
+                    {
+                        selectedVehicle.setOpen(false);
+                        firestore.collection("all-items").document("all-vehicles").collection("vehicles").document(selectedVehicle.getVehicleID()).update("open", false).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                firestore.collection("all-items").document("all-vehicles").collection("vehicles").document(selectedVehicle.getVehicleID()).update("currCapacity", temp).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Intent intent = new Intent(getApplicationContext(), VehiclesInfoActivity.class);
+                                        Toast.makeText(getApplicationContext(),"Successfully booked",Toast.LENGTH_LONG).show();
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                });
+                            }
+                        });
                     }
-                });
-            }
-        });
+                    else
+                    {
+                        firestore.collection("all-items").document("all-vehicles").collection("vehicles").document(selectedVehicle.getVehicleID()).update("currCapacity", temp).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Intent intent = new Intent(getApplicationContext(), VehiclesInfoActivity.class);
+                                Toast.makeText(getApplicationContext(),"Successfully booked",Toast.LENGTH_LONG).show();
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+                    }
+                }
+            });
+        }
     }
 
 

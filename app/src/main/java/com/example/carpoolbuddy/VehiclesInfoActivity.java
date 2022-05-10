@@ -48,7 +48,7 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
         String userID = currUser.getUid();
         vehiclesList.clear();
         TaskCompletionSource<String> getAllCarsTask = new TaskCompletionSource<>();
-        firestore.collection("all-users").document(userID).collection("vehicles").whereEqualTo("open",true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firestore.collection("all-items").document("all-vehicles").collection("vehicles").whereEqualTo("open",true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful() && task.getResult()!= null)
@@ -85,6 +85,12 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
 
     }
 
+    public void back(View v)
+    {
+        Intent myIntent = new Intent(getApplicationContext(), UserProfileActivity.class);
+        startActivity(myIntent);
+    }
+
     @Override
     public void onNoteClick(int position) {
         System.out.println("--> clicked");
@@ -93,4 +99,9 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
         startActivity(myIntent);
     }
 
+    //creative task --> choice categories for price, then refreshes rec view based on price
+    //0-2 euro --> only cars with price 0-2 euro shows up
+    //2-4 euro --> only cars with price 2-4 euro shows up
+    //4-6 euro --> only cars with price 4-6 euro shows uo
+    //6+ euro --> only cars with more than 6 euro price shows up
 }
