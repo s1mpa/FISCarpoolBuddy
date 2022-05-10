@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,6 +31,7 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
     private FirebaseFirestore firestore;
     private FirebaseUser currUser;
     private ArrayList<Vehicle> vehiclesList;
+    private EditText filterInput;
 
 
     RecyclerView recView;
@@ -89,6 +91,27 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
     {
         Intent myIntent = new Intent(getApplicationContext(), UserProfileActivity.class);
         startActivity(myIntent);
+    }
+
+    public void filter(View v)
+    {
+        filterInput = findViewById(R.id.filterPriceInput);
+        if(filterInput.getText().toString().equals("0-2"))
+        {
+
+        }
+        if(filterInput.getText().toString().equals("2-4"))
+        {
+
+        }
+        if(filterInput.getText().toString().equals("4-6"))
+        {
+
+        }
+        if(Double.parseDouble(filterInput.getText().toString()) > 6.0)
+        {
+
+        }
     }
 
     @Override
