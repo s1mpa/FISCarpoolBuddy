@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -47,8 +48,8 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
         vehiclesList = new ArrayList<>();
         recView = findViewById(R.id.vehiclesRecView);
 
-        String userID = currUser.getUid();
         vehiclesList.clear();
+
         TaskCompletionSource<String> getAllCarsTask = new TaskCompletionSource<>();
         firestore.collection("all-items").document("all-vehicles").collection("vehicles").whereEqualTo("open",true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -93,30 +94,52 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
         startActivity(myIntent);
     }
 
-    public void filter(View v)
+    public void filter(View v) //price filter
     {
+        vehiclesList.clear();
         filterInput = findViewById(R.id.filterPriceInput);
-        if(filterInput.getText().toString().equals("0-2"))
-        {
+        Double priceLimit = Double.parseDouble(filterInput.getText().toString());
+        TaskCompletionSource<String> getAllCarsTask = new TaskCompletionSource<>();
 
-        }
-        if(filterInput.getText().toString().equals("2-4"))
-        {
+        firestore.collection("all-items").document("all-vehicles").collection("vehicles").whereLessThanOrEqualTo("price", priceLimit).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful() && task.getResult()!= null)
+                {
+                    for(QueryDocumentSnapshot document : task.getResult())
+                    {
+                        if(document.toObject(Vehicle.class).isOpen())
+                        {
+                            vehiclesList.add(document.toObject(Vehicle.class));
+                        }
+                    }
+                    getAllCarsTask.setResult(null);
+                }
+                else
+                {
+                    Log.d("VehiclesInfoActivity","Error fetching vehicle info from firestore", task.getException());
+                }
+            }
+        });
 
-        }
-        if(filterInput.getText().toString().equals("4-6"))
-        {
+        //makes sure that all info has been retrieved before proceeding
+        getAllCarsTask.getTask().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                for(Vehicle v : vehiclesList)
+                {
+                    System.out.println("Retrieved vehicle (price < " + priceLimit + ", price: " + v.getPrice() + ") --->" + v.getVehicleID()); //just to check it was able to get all vehicles
+                }
 
-        }
-        if(Double.parseDouble(filterInput.getText().toString()) > 6.0)
-        {
 
-        }
-        else
-        {
+                VehiclesAdapter myAdapter = new VehiclesAdapter(vehiclesList, VehiclesInfoActivity.this);
+                recView.setAdapter(myAdapter);
+                recView.setLayoutManager(new LinearLayoutManager(VehiclesInfoActivity.this));
 
-        }
+            }
+        });
     }
+
 
     @Override
     public void onNoteClick(int position) {
