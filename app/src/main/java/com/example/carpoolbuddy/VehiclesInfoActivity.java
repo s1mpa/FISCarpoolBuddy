@@ -33,6 +33,7 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
     private FirebaseUser currUser;
     private ArrayList<Vehicle> vehiclesList;
     private EditText filterInput;
+    private EditText filterInput2;
 
 
     RecyclerView recView;
@@ -98,43 +99,88 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
     {
         vehiclesList.clear();
         filterInput = findViewById(R.id.filterPriceInput);
-        Double priceLimit = Double.parseDouble(filterInput.getText().toString());
+        filterInput2 = findViewById(R.id.filterPriceInput2);
         TaskCompletionSource<String> getAllCarsTask = new TaskCompletionSource<>();
 
-        firestore.collection("all-items").document("all-vehicles").collection("vehicles").whereLessThanOrEqualTo("price", priceLimit).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful() && task.getResult()!= null)
-                {
-                    for(QueryDocumentSnapshot document : task.getResult())
+        if(filterInput.getText().toString().isEmpty())
+        {
+            firestore.collection("all-items").document("all-vehicles").collection("vehicles").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful() && task.getResult()!= null)
                     {
-                        if(document.toObject(Vehicle.class).isOpen())
+                        for(QueryDocumentSnapshot document : task.getResult())
                         {
-                            vehiclesList.add(document.toObject(Vehicle.class));
+                            if(document.toObject(Vehicle.class).isOpen())
+                            {
+                                vehiclesList.add(document.toObject(Vehicle.class));
+                            }
                         }
+                        getAllCarsTask.setResult(null);
                     }
-                    getAllCarsTask.setResult(null);
+                    else
+                    {
+                        Log.d("VehiclesInfoActivity","Error fetching vehicle info from firestore", task.getException());
+                    }
                 }
-                else
-                {
-                    Log.d("VehiclesInfoActivity","Error fetching vehicle info from firestore", task.getException());
+            });
+        }
+        else
+        {
+            double priceLimit = Double.parseDouble(filterInput.getText().toString());
+            firestore.collection("all-items").document("all-vehicles").collection("vehicles").whereLessThanOrEqualTo("price", priceLimit).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful() && task.getResult()!= null)
+                    {
+                        for(QueryDocumentSnapshot document : task.getResult())
+                        {
+                            if(document.toObject(Vehicle.class).isOpen())
+                            {
+                                vehiclesList.add(document.toObject(Vehicle.class));
+                            }
+                        }
+                        getAllCarsTask.setResult(null);
+                    }
+                    else
+                    {
+                        Log.d("VehiclesInfoActivity","Error fetching vehicle info from firestore", task.getException());
+                    }
                 }
-            }
-        });
+            });
+        }
+
+
 
         //makes sure that all info has been retrieved before proceeding
         getAllCarsTask.getTask().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
-            public void onComplete(@NonNull Task<String> task) {
-                for(Vehicle v : vehiclesList)
+            public void onComplete(@NonNull Task<String> task)
+            {
+                if(filterInput2.getText().toString().isEmpty())
                 {
-                    System.out.println("Retrieved vehicle (price < " + priceLimit + ", price: " + v.getPrice() + ") --->" + v.getVehicleID()); //just to check it was able to get all vehicles
+                    VehiclesAdapter myAdapter = new VehiclesAdapter(vehiclesList, VehiclesInfoActivity.this);
+                    recView.setAdapter(myAdapter);
+                    recView.setLayoutManager(new LinearLayoutManager(VehiclesInfoActivity.this));
                 }
+                else
+                {
+                    double priceLimit2 = Double.parseDouble(filterInput2.getText().toString());
+                    ArrayList<Vehicle> toRemove = new ArrayList<>();
+                    for(Vehicle temp : vehiclesList)
+                    {
+                        if(temp.getPrice()<priceLimit2)
+                        {
+                            toRemove.add(temp);
+                        }
+                    }
+                    vehiclesList.removeAll(toRemove);
 
+                    VehiclesAdapter myAdapter = new VehiclesAdapter(vehiclesList, VehiclesInfoActivity.this);
+                    recView.setAdapter(myAdapter);
+                    recView.setLayoutManager(new LinearLayoutManager(VehiclesInfoActivity.this));
 
-                VehiclesAdapter myAdapter = new VehiclesAdapter(vehiclesList, VehiclesInfoActivity.this);
-                recView.setAdapter(myAdapter);
-                recView.setLayoutManager(new LinearLayoutManager(VehiclesInfoActivity.this));
+                }
 
             }
         });
@@ -149,9 +195,4 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
         startActivity(myIntent);
     }
 
-    //creative task --> choice categories for price, then refreshes rec view based on price
-    //0-2 euro --> only cars with price 0-2 euro shows up
-    //2-4 euro --> only cars with price 2-4 euro shows up
-    //4-6 euro --> only cars with price 4-6 euro shows uo
-    //6+ euro --> only cars with more than 6 euro price shows up
 }
