@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "859579312034",
+    "project_id": "fiscarpoolapp",
+    "storage_bucket": "fiscarpoolapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859579312034:android:d2da1f29a928db00c9f4fb",
+        "android_client_info": {
+          "package_name": "com.example.carpoolbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "859579312034-damimkf6n040vd3g63ctv4t3oidjlmec.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWdH4YT8sK0Pm5M5nLmE1hnHfy8nRbN58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "859579312034-damimkf6n040vd3g63ctv4t3oidjlmec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
