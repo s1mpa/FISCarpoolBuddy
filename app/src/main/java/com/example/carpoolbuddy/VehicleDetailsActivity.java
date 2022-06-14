@@ -44,7 +44,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
         mUser = mAuth.getCurrentUser();
 
-        if(getIntent().hasExtra("vehicles"))
+        if(getIntent().hasExtra("vehicles")) //gets all info about selected vehicle from previous activity
         {
             selectedVehicle = getIntent().getParcelableExtra("vehicles");
             owner.setText(selectedVehicle.getOwner());
@@ -57,28 +57,30 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         }
     }
 
-    public void back(View v)
+    public void back(View v) //returns to previous screen
     {
         Intent myIntent = new Intent(this, VehiclesInfoActivity.class);
         startActivity(myIntent);
     }
 
-    public void bookRide(View v)
+    public void bookRide(View v) //books a ride for current user at their selected vehicle
     {
-        if(selectedVehicle.getRidersUIDs().contains(mUser.getUid()))
+        if(selectedVehicle.getRidersUIDs().contains(mUser.getUid())) //checks if current user already booked that same ride
         {
             Toast.makeText(getApplicationContext(),"Already booked!",Toast.LENGTH_LONG).show();
         }
         else
         {
+            //adds the current user to list of riders in their selected vehicle, updates this info on firebase too
             selectedVehicle.addRiderUID(mUser.getUid());
             firestore.collection("all-items").document("all-vehicles").collection("vehicles").document(selectedVehicle.getVehicleID()).update("ridersUIDs", selectedVehicle.getRidersUIDs()).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
+                    //updates current capacity of vehicle
                     int temp = selectedVehicle.getCurrCapacity() - 1;
                     selectedVehicle.setCurrCapacity(temp);
 
-                    if(selectedVehicle.getCurrCapacity() == 0)
+                    if(selectedVehicle.getCurrCapacity() == 0) //checks if vehicle is full and updates the object + server accordingly
                     {
                         selectedVehicle.setOpen(false);
                         firestore.collection("all-items").document("all-vehicles").collection("vehicles").document(selectedVehicle.getVehicleID()).update("open", false).addOnCompleteListener(new OnCompleteListener<Void>() {

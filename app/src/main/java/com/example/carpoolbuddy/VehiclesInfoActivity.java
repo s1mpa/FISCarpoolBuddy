@@ -51,6 +51,7 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
 
         vehiclesList.clear();
 
+        //fetches all vehicles from firebase
         TaskCompletionSource<String> getAllCarsTask = new TaskCompletionSource<>();
         firestore.collection("all-items").document("all-vehicles").collection("vehicles").whereEqualTo("open",true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -79,7 +80,7 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
                     System.out.println("Retrieved vehicle --->" + v.getVehicleID()); //just to check it was able to get all vehicles
                 }
 
-
+                //populates recycler view
                 VehiclesAdapter myAdapter = new VehiclesAdapter(vehiclesList, VehiclesInfoActivity.this);
                 recView.setAdapter(myAdapter);
                 recView.setLayoutManager(new LinearLayoutManager(VehiclesInfoActivity.this));
@@ -89,20 +90,20 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
 
     }
 
-    public void back(View v)
+    public void back(View v) //returns to previous page
     {
         Intent myIntent = new Intent(getApplicationContext(), UserProfileActivity.class);
         startActivity(myIntent);
     }
 
-    public void filter(View v) //price filter
+    public void filter(View v) //filters out vehicles based on price max and min inputs
     {
         vehiclesList.clear();
-        filterInput = findViewById(R.id.filterPriceInput);
-        filterInput2 = findViewById(R.id.filterPriceInput2);
+        filterInput = findViewById(R.id.filterPriceInput); //max price input
+        filterInput2 = findViewById(R.id.filterPriceInput2); //min price input
         TaskCompletionSource<String> getAllCarsTask = new TaskCompletionSource<>();
 
-        if(filterInput.getText().toString().isEmpty())
+        if(filterInput.getText().toString().isEmpty()) //if the max price field is empty, fetch vehicles as normal
         {
             firestore.collection("all-items").document("all-vehicles").collection("vehicles").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -125,7 +126,7 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
                 }
             });
         }
-        else
+        else //if max price has a number, run different query that includes a requirement for being <= max price input
         {
             double priceLimit = Double.parseDouble(filterInput.getText().toString());
             firestore.collection("all-items").document("all-vehicles").collection("vehicles").whereLessThanOrEqualTo("price", priceLimit).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -151,19 +152,19 @@ public class VehiclesInfoActivity extends AppCompatActivity implements VehicleVi
         }
 
 
-
         //makes sure that all info has been retrieved before proceeding
         getAllCarsTask.getTask().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task)
             {
-                if(filterInput2.getText().toString().isEmpty())
+                if(filterInput2.getText().toString().isEmpty()) //if the min price field is empty, proceed with no filter
                 {
+                    //populate recycler view
                     VehiclesAdapter myAdapter = new VehiclesAdapter(vehiclesList, VehiclesInfoActivity.this);
                     recView.setAdapter(myAdapter);
                     recView.setLayoutManager(new LinearLayoutManager(VehiclesInfoActivity.this));
                 }
-                else
+                else //if min price has a number, check through vehiclesList to delete all that doesn't fit the minimum
                 {
                     double priceLimit2 = Double.parseDouble(filterInput2.getText().toString());
                     ArrayList<Vehicle> toRemove = new ArrayList<>();
